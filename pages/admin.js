@@ -50,6 +50,11 @@ const Admin = () => {
     });
     notify();
     setRefresh(true);
+    setCompany("");
+    setDescription("");
+    setLocation("");
+    setSalary("");
+    setTitle("");
   };
 
   return (
