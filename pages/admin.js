@@ -1,6 +1,7 @@
 import Navbar from "@/components/navbar";
 import axios from "axios";
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 
 const Admin = () => {
     const [title, setTitle] = useState("");
@@ -8,6 +9,8 @@ const Admin = () => {
     const [company, setCompany] = useState("");
     const [location, setLocation] = useState("");
     const [salary, setSalary] = useState();
+
+    const router = useRouter();
 
     const formSubmit = (e) => {
         e.preventDefault();
@@ -18,6 +21,7 @@ const Admin = () => {
             location,
             salary,
         });
+        router.push("/job");
     };
 
   return (
