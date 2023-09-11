@@ -1,4 +1,4 @@
-import { Jobs } from "@/models/jobs";
+import { Jobs } from "@/models/Jobs";
 import { mongooseConnect } from "@/lib/mongoose";
 
 
