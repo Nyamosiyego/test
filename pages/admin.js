@@ -28,14 +28,13 @@ const Admin = () => {
     if (refresh) {
       const delay = 2000;
       setCompany("");
-        setDescription("");
-        setLocation("");
-        setSalary("");
-        setTitle("");
-        setTimeout(() => {
-            setRefresh(false);
-            }
-        , delay);
+      setDescription("");
+      setLocation("");
+      setSalary("");
+      setTitle("");
+      setTimeout(() => {
+        setRefresh(false);
+      }, delay);
     }
   }, []);
 
