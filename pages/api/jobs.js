@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   if (method == "GET") {
     try {
       const jobs = await Jobs.find({});
-      res.status(200).json(jobs).send(jobs);
+      res.status(200).json(jobs);
     } catch (error) {
       res.status(400).json(error);
     }
