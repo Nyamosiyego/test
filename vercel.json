@@ -1,12 +1,8 @@
 {
-    "functions": {
-      "pages/api/jobs.js": {
-        "memory": 3008,
-        "maxDuration": 60
-      },
-      "pages/api/hello.js": {
-        "memory": 1024,
-        "maxDuration": 30
-      }
-    }
+    "version": 2,
+    "name": "project-id-on-vercel-dashboard",
+    "public": true,
+    "builds": [{ "src": "pages/index.js", "use": "@vercel/node" }],
+    "routes": [{ "src": "/(.*)", "dest": "/pages/index.js" }]
   }
+  
