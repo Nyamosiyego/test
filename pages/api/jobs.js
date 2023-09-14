@@ -10,9 +10,7 @@ export default async function handler(req, res) {
       const jobs = await Jobs.find({});
       res.status(200).json(jobs);
     } catch (error) {
-      if (error.status == 504){
-        res.json(error);    
-      }
+      res.status(400).json(error);
     }
   }
 
