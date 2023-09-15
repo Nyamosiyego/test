@@ -63,7 +63,7 @@ const Admin = () => {
         <form className="flex flex-col mt-4 gap-2">
           <Toaster
             containerStyle={{
-              top: 50,
+              top: 48,
               left: 20,
               bottom: 20,
               right: 20,
