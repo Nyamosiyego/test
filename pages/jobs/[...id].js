@@ -1,7 +1,9 @@
 import Navbar from "@/components/navbar";
 import React from "react";
+import { useUser } from "@clerk/nextjs";
 
 const JobsDetails = () => {
+  const { isSignedIn, user } = useUser();
   return (
     <>
       <Navbar />

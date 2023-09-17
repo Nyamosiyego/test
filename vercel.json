@@ -1,8 +1,0 @@
-{
-    "version": 2,
-    "name": "project-id-on-vercel-dashboard",
-    "public": true,
-    "builds": [{ "src": "pages/index.js", "use": "@vercel/node" }],
-    "routes": [{ "src": "/(.*)", "dest": "/pages/index.js" }]
-  }
-  
