@@ -6,11 +6,20 @@ export default async function handler(req, res) {
   const { method } = req;
 
   if (method == "GET") {
-    try {
-      const jobs = await Jobs.find({});
-      res.status(200).json(jobs);
-    } catch (error) {
-      res.status(400).json(error);
+    if (req.query?.id) {
+      try {
+        const job = await Jobs.findOne({ _id: req.query?.id });
+        res.status(201).json(job);
+      } catch (error) {
+        res.status(400).json(error);
+      }
+    } else {
+      try {
+        const jobs = await Jobs.find({});
+        res.status(200).json(jobs);
+      } catch (error) {
+        res.status(400).json(error);
+      }
     }
   }
 

@@ -6,16 +6,19 @@ import Link from "next/link";
 import { BsBookmarkFill } from "react-icons/bs";
 import { Toaster, toast } from "react-hot-toast";
 import { useUser } from "@clerk/nextjs";
+import Spinner from "@/components/spinner";
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const { isLoaded, isSignedIn, user } = useUser();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getJobs = async () => {
       try {
         const response = await axios.get("/api/jobs");
         setJobs(response.data);
+        setIsLoading(false); // Set loading to false once jobs are fetched
       } catch (error) {
         console.error(error);
       }
@@ -23,62 +26,65 @@ const Jobs = () => {
     getJobs();
   }, []);
 
-  const bookmark = async(jobId) => {
+  const bookmark = async (jobId) => {
     try {
       await axios.post("/api/bookmarks", {
-        JobId: jobId,  
-        user : user?.id
+        JobId: jobId,
+        user: user?.id,
       });
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
-  const unbookmark = async(JobId) => {
+  const unbookmark = async (JobId) => {
     try {
       await axios.delete("/api/bookmarks", {
         data: {
           JobId,
-          user: user?.id
-        }
+          user: user?.id,
+        },
       });
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
-  const notify = () => toast.success("Bookmark removed!", 
-  {
-    style: {
-      borderRadius: '10px',
-      background: '#333',
-      color: '#fff',
-    },
-  }
-  );
+  const notify = () =>
+    toast.success("Bookmark removed!", {
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
 
   const toggleBookmark = (jobId) => {
     setJobs((prevJobs) =>
       prevJobs.map((job) =>
-        job._id === jobId ? { ...job, bookmarked: !job.bookmarked } : job
-      )
+        job._id === jobId ? { ...job, bookmarked: !job.bookmarked } : job,
+      ),
     );
   };
 
-  const notify2 = () => toast.success("Job bookmarked!", 
-  {
-    style: {
-      borderRadius: '10px',
-      background: '#333',
-      color: '#fff',
-    },
+  const notify2 = () =>
+    toast.success("Job bookmarked!", {
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
+
+  if (isLoading) {
+    // Show a loading indicator while jobs are being fetched
+    return <Spinner />;
   }
-  );
 
   return (
     <>
       <Navbar />
-      <Toaster 
+      <Toaster
         position="top-center"
         reverseOrder={false}
         containerStyle={{
@@ -103,7 +109,9 @@ const Jobs = () => {
                     </h5>
                   </Link>
                   <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    {job.description.length > 250 ? job.description.substring(0, 250) + "..." : job.description}
+                    {job.description.length > 250
+                      ? job.description.substring(0, 250) + "..."
+                      : job.description}
                   </p>
                   <div className="flex items-center justify-between">
                     <Link
@@ -136,7 +144,9 @@ const Jobs = () => {
                         }}
                         onClick={() => {
                           toggleBookmark(job._id);
-                          job.bookmarked ? unbookmark(job._id) : bookmark(job._id);
+                          job.bookmarked
+                            ? unbookmark(job._id)
+                            : bookmark(job._id);
                           job.bookmarked ? notify() : notify2();
                         }}
                       />
