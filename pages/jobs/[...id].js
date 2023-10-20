@@ -43,7 +43,7 @@ const JobsDetails = () => {
 
   if (!details || Object.keys(details).length === 0) {
     // Show a message or handle the case where there is no job data
-    return <div>No job data found</div>;
+    return <Spinner />;
   }
 
   return (
