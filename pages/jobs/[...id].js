@@ -8,8 +8,7 @@ import Spinner from "@/components/spinner";
 
 const JobsDetails = () => {
   const router = useRouter();
-  const { isSignedIn, user } = useUser();
-  const [jobs, setJobs] = useState();
+  const [details, setDetails] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const { id } = router.query;
 
@@ -18,7 +17,9 @@ const JobsDetails = () => {
       try {
         if (id) {
           const response = await axios.get(`/api/jobs?id=${id}`);
-          setJobs(response.data);
+          const job = response.data; // Assuming response.data is the job object
+          console.log(job);
+          setDetails(job);
         }
         setIsLoading(false);
       } catch (error) {
@@ -35,15 +36,28 @@ const JobsDetails = () => {
     getJobs();
   }, [id]);
 
-  if (!jobs) {
-    // Show a loading indicator while jobs are being fetched
+  if (isLoading) {
+    // Show a loading indicator while data is being fetched
     return <Spinner />;
+  }
+
+  if (!details || Object.keys(details).length === 0) {
+    // Show a message or handle the case where there is no job data
+    return <div>No job data found</div>;
   }
 
   return (
     <>
       <Navbar />
-      <div className="mt-20 px-8">JobsDetails</div>
+      <div className="mt-20">
+        <div className="px-8 py-4">
+          <h1 className="font-bold text-xl">{details.company}</h1>
+          <h2 className="font-bold mt-3">{details.title}</h2>
+          {/* Render other details here */}
+          <p className="mt-3">{details.description}</p>
+          <p>{details.location}</p>
+        </div>
+      </div>
     </>
   );
 };

@@ -17,7 +17,7 @@ const Jobs = () => {
     const getJobs = async () => {
       try {
         const response = await axios.get("/api/jobs");
-        setJobs(response.data);
+        setJobs(response.data)
         setIsLoading(false); // Set loading to false once jobs are fetched
       } catch (error) {
         console.error(error);

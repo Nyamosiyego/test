@@ -8,8 +8,8 @@ export default async function handler(req, res) {
   if (method == "GET") {
     if (req.query?.id) {
       try {
-        const job = await Jobs.findOne({ _id: req.query?.id });
-        res.status(201).json(job);
+        const jobs = await Jobs.findOne({ _id: req.query?.id });
+        res.status(201).json(jobs);
       } catch (error) {
         res.status(400).json(error);
       }
