@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Spinner from "@/components/spinner";
+import Button from "@/components/button";
 
 const JobsDetails = () => {
   const router = useRouter();
@@ -49,16 +50,17 @@ const JobsDetails = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-row items-start mt-20">
-        <div className="ml-4">
-          <h2 className="font-bold">Recommended Jobs</h2>
-        </div>
-        <div className="flex-1 px-16 py-4 lg:w-3/5 sm:min-w-full">
+      <div className="flex flex-col items-start mt-20 lg:flex-row">
+        <div className="px-4 lg:px-16 py-4 lg:w-3/4">
           <h1 className="font-bold text-2xl">{details.company}</h1>
-          <h2 className="font-bold mt-3">{details.title}</h2>
+          <h2 className="font-bold mt-2">{details.title}</h2>
           <p className="text-gray-500">{details.location}</p>
           {/* Render other details here */}
-          <p className="mt-3">{details.description}</p>
+          <p className="mt-2">{details.description}</p>
+          <Button>Apply</Button>
+        </div>
+        <div className="flex-1 ml-4 lg:ml-0">
+          <h2 className="font-bold text-xl">Recommended Jobs</h2>
         </div>
       </div>
     </>

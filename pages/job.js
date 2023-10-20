@@ -104,13 +104,15 @@ const Jobs = () => {
               >
                 <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                   <Link href={`/jobs/${job._id}`}>
-                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    <h5 className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                       {job.title}
                     </h5>
+                    <p className="font-bold">{job.company}</p>
+                    <p className="text-gray-500">{job.location}</p>
                   </Link>
                   <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    {job.description.length > 250
-                      ? job.description.substring(0, 250) + "..."
+                    {job.description.length > 200
+                      ? job.description.substring(0, 200) + "...."
                       : job.description}
                   </p>
                   <div className="flex items-center justify-between">
