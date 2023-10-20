@@ -49,13 +49,16 @@ const JobsDetails = () => {
   return (
     <>
       <Navbar />
-      <div className="mt-20">
-        <div className="px-8 py-4">
-          <h1 className="font-bold text-xl">{details.company}</h1>
+      <div className="flex flex-row items-start mt-20">
+        <div className="ml-4">
+          <h2 className="font-bold">Recommended Jobs</h2>
+        </div>
+        <div className="flex-1 px-16 py-4 lg:w-3/5 sm:min-w-full">
+          <h1 className="font-bold text-2xl">{details.company}</h1>
           <h2 className="font-bold mt-3">{details.title}</h2>
+          <p className="text-gray-500">{details.location}</p>
           {/* Render other details here */}
           <p className="mt-3">{details.description}</p>
-          <p>{details.location}</p>
         </div>
       </div>
     </>
