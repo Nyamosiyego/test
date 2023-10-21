@@ -7,11 +7,13 @@ import { BsBookmarkFill } from "react-icons/bs";
 import { Toaster, toast } from "react-hot-toast";
 import { useUser } from "@clerk/nextjs";
 import Spinner from "@/components/spinner";
+import Swal from "sweetalert2";
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const { isLoaded, isSignedIn, user } = useUser();
   const [isLoading, setIsLoading] = useState(true);
+  const [bookmarks, setBookmarks] = useState([]);
 
   useEffect(() => {
     const getJobs = async () => {
@@ -23,32 +25,21 @@ const Jobs = () => {
         console.error(error);
       }
     };
+
+    const getBookmarks = async () => {
+      try {
+        if (user?.id) {
+          const response = await axios.get(`/api/bookmarks?id=${user.id}`);
+          setBookmarks(response.data.map((bookmark) => bookmark.JobId));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     getJobs();
-  }, []);
-
-  const bookmark = async (jobId) => {
-    try {
-      await axios.post("/api/bookmarks", {
-        JobId: jobId,
-        user: user?.id,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const unbookmark = async (JobId) => {
-    try {
-      await axios.delete("/api/bookmarks", {
-        data: {
-          JobId,
-          user: user?.id,
-        },
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    getBookmarks();
+  }, [user?.id]);
 
   const notify = () =>
     toast.success("Bookmark removed!", {
@@ -58,23 +49,43 @@ const Jobs = () => {
         color: "#fff",
       },
     });
-
-  const toggleBookmark = (jobId) => {
-    setJobs((prevJobs) =>
-      prevJobs.map((job) =>
-        job._id === jobId ? { ...job, bookmarked: !job.bookmarked } : job,
-      ),
-    );
-  };
-
-  const notify2 = () =>
-    toast.success("Job bookmarked!", {
+    const notify2 = () =>
+    toast.success("Job Bookmarked!", {
       style: {
         borderRadius: "10px",
         background: "#333",
         color: "#fff",
       },
     });
+
+
+  const toggleBookmark = async (jobId) => {
+    try {
+      const isBookmarked = bookmarks.includes(jobId);
+
+      if (isBookmarked) {
+        await axios.delete("/api/bookmarks", {
+          data: {
+            JobId: jobId,
+            user: user?.id,
+          },
+        });
+        setBookmarks((prevBookmarks) =>
+          prevBookmarks.filter((id) => id !== jobId)
+        );
+        notify();
+      } else {
+        await axios.post("/api/bookmarks", {
+          JobId: jobId,
+          user: user?.id,
+        });
+        setBookmarks((prevBookmarks) => [...prevBookmarks, jobId]);
+        notify2();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   if (isLoading) {
     // Show a loading indicator while jobs are being fetched
@@ -141,16 +152,10 @@ const Jobs = () => {
                       <BsBookmarkFill
                         className="w-6 h-6 mt-12"
                         style={{
-                          color: job.bookmarked ? "black" : "grey",
+                          color: bookmarks.includes(job._id) ? "black" : "grey",
                           cursor: "pointer",
                         }}
-                        onClick={() => {
-                          toggleBookmark(job._id);
-                          job.bookmarked
-                            ? unbookmark(job._id)
-                            : bookmark(job._id);
-                          job.bookmarked ? notify() : notify2();
-                        }}
+                        onClick={() => toggleBookmark(job._id)}
                       />
                     </button>
                   </div>

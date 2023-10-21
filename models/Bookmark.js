@@ -9,6 +9,7 @@ const BookmarkSchema = new Schema({
   },
   user: {
     type: String,
+    required: true,
   },
 });
 
