@@ -100,7 +100,7 @@ const Jobs = () => {
             jobs.map((job) => (
               <div
                 key={job._id}
-                className="w-auto h-40 grid grid-flow-row auto-rows-3fr"
+                className="w-auto h-36 grid grid-flow-row auto-rows-3fr"
               >
                 <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                   <Link href={`/jobs/${job._id}`}>

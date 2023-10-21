@@ -1,18 +1,24 @@
 /* eslint-disable react/no-unescaped-entities */
 import MyApplications from "@/components/myapplications";
 import Navbar from "@/components/navbar";
+import SavedApplications from "@/components/savedapplications";
 import { UserProfile } from "@clerk/nextjs";
 
 export default function Account() {
   return (
     <>
       <Navbar />
-      <div className="px-8 py-4 mt-28">
-        <div className="flex justify-between">
-          <div className="h-20">
-            <MyApplications />
+      <div className="px-8 py-4 mt-20">
+        <div className="flex flex-col lg:flex-row justify-center">
+          <div className="flex md:flex-row gap-8 lg:flex-col flex-col">
+            <div className="lg:h-20">
+              <MyApplications />
+            </div>
+            <div className="lg:mt-24 lg:h-20">
+              <SavedApplications />
+            </div>
           </div>
-          <div className="sm: px-5">
+          <div className="lg:px-5 mt-10 lg:mt-0 flex items-center justify-center">
             <UserProfile />
           </div>
         </div>
