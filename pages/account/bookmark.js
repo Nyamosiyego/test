@@ -1,44 +1,49 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/navbar";
 import axios from "axios";
-import Link from "next/link";
-import { BsBookmarkFill } from "react-icons/bs";
-import { Toaster, toast } from "react-hot-toast";
+import Navbar from "@/components/navbar";
 import { useUser } from "@clerk/nextjs";
+import { BsBookmarkFill } from "react-icons/bs";
+import Back from "@/components/backicon";
+import Link from "next/link";
+import { Toaster, toast } from "react-hot-toast";
 import Spinner from "@/components/spinner";
-import Swal from "sweetalert2";
+import { useRouter } from 'next/router';
 
-const Jobs = () => {
-  const [jobs, setJobs] = useState([]);
-  const { isLoaded, isSignedIn, user } = useUser();
-  const [isLoading, setIsLoading] = useState(true);
+const Bookmark = () => {
+  const { user } = useUser();
   const [bookmarks, setBookmarks] = useState([]);
+  const [bookmark, setBookmark] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [jobs, setJobs] = useState([]);
+
+  const router = useRouter();
+  const handleRefresh = () => {
+    router.reload();
+  };
+
 
   useEffect(() => {
-    const getJobs = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get("/api/jobs");
-        setJobs(response.data);
-        setIsLoading(false); // Set loading to false once jobs are fetched
-      } catch (error) {
-        console.error(error);
-      }
-    };
+        const bookmarksResponse = await axios.get(`/api/bookmarks?id=${user?.id}`);
+        setBookmark(bookmarksResponse.data);
+        setBookmarks(bookmarksResponse.data.map((bookmark) => bookmark.JobId));
 
-    const getBookmarks = async () => {
-      try {
-        if (user?.id) {
-          const response = await axios.get(`/api/bookmarks?id=${user.id}`);
-          setBookmarks(response.data.map((bookmark) => bookmark.JobId));
+        // Fetch job details for each JobId
+        const jobsData = [];
+        for (const bookmark of bookmarksResponse.data) {
+          const jobResponse = await axios.get(`/api/jobs?id=${bookmark.JobId}`);
+          jobsData.push(jobResponse.data);
+          setIsLoading(false);
         }
+
+        setJobs(jobsData);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    getJobs();
-    getBookmarks();
+    fetchData();
   }, [user?.id]);
 
   const notify = () =>
@@ -73,6 +78,7 @@ const Jobs = () => {
           prevBookmarks.filter((id) => id !== jobId),
         );
         notify();
+        router.reload()
       } else {
         await axios.post("/api/bookmarks", {
           JobId: jobId,
@@ -92,20 +98,13 @@ const Jobs = () => {
   }
 
   return (
-    <>
+    <div className="px-6">
       <Navbar />
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        containerStyle={{
-          top: 70,
-          left: 20,
-          bottom: 20,
-          right: 20,
-        }}
-      />
-      <div className="px-8 py-4 mt-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-20">
+      <div className="mt-20 flex flex-row gap-6 font-bold">
+        <Back />
+        <h1 className="text-2xl">Saved Jobs</h1>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-20 mt-5">
           {jobs.length > 0 &&
             jobs.map((job) => (
               <div
@@ -131,24 +130,26 @@ const Jobs = () => {
                       className="inline-flex items-center mt-14 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
                       Read more
-                      <svg
-                        className="w-3.5 h-3.5 ml-2"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 14 10"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M1 5h12m0 0L9 1m4 4L9 9"
-                        />
-                      </svg>
+                      <button onClick={router.reload}>
+                          <svg
+                            className="w-3.5 h-3.5 ml-2"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 14 10"
+                          >
+                            <path
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M1 5h12m0 0L9 1m4 4L9 9"
+                            />
+                          </svg>
+                      </button>
                     </Link>
                     <button>
-                      <BsBookmarkFill
+                    <BsBookmarkFill
                         className="w-6 h-6 mt-12"
                         style={{
                           color: bookmarks.includes(job._id) ? "black" : "grey",
@@ -162,9 +163,8 @@ const Jobs = () => {
               </div>
             ))}
         </div>
-      </div>
-    </>
+    </div>
   );
 };
 
-export default Jobs;
+export default Bookmark;
