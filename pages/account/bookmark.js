@@ -104,7 +104,7 @@ const Bookmark = () => {
         <Back />
         <h1 className="text-2xl">Saved Jobs</h1>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-20 mt-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-64 lg:gap-20 md:gap-20 mt-5">
           {jobs.length > 0 &&
             jobs.map((job) => (
               <div
@@ -129,7 +129,6 @@ const Bookmark = () => {
                       href={`/jobs/${job._id}`}
                       className="inline-flex items-center mt-14 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
-                      Read more
                       <button onClick={router.reload}>
                           <svg
                             className="w-3.5 h-3.5 ml-2"
